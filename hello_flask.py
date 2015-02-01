@@ -1,28 +1,21 @@
-#CREATES A STREAM TO LISTEN TO TWEETS ABOUT A SPECIFIC KEYWORD, CAN USE TO CREATE A STREAM OF TWEETS CREATED BY CERTAIN USER
-#INPUT = NUMBER OF TWEETS AND USER, OUTPUT = ARRAY OF INDIVIDUAL TWEET STRINGS
-#MAKE SURE TO OUTPUT AS TXT FILE
+#!/usr/bin/env python
 
+import flask
+from flask import Flask, jsonify, request
 import tweepy
 from tweepy.streaming import StreamListener
 from tweepy import Stream
 import json
 
+# Create the application.
+APP = flask.Flask(__name__)
 
 
-# atoken = '1188729962-XuZUgmaVFFiTRnh7h3iE2e2XvISGdDQWH7uiPmO'
-# asecret = 'J0U97BpjzzwKHqUBBNPlpAuwWbkt4AgFkdpUJqlMQcsDw'
 
-
-# lily wen
-# ckey = 'anBC9SHrBRMkah3vL0djtUzuv'
-# csecret = 'OwfQRDpEo9HuwlLQFJZaaiJDvUbSLGPlhpV3kIqXaRBulAsFzk'
-
-#brian lee
-
-atoken = '3006060253-GOGZkRZOa8p9tU2bxYLYHknKoLCC75DE5lFx5iD'
-asecret = 'UAtu8khsOkHCUfDp0y5ahb1AV6GvcHVxPhz23lI1KtBCX'
-ckey = '3nis884mLWtLoFppAX7EGwlwC'
-csecret = 'tcDmsh1vnpzxp04vjVZTps1rr4U2g0Cnkd5CgTvWsICrBTz07F'
+ckey = 'anBC9SHrBRMkah3vL0djtUzuv'
+csecret = 'OwfQRDpEo9HuwlLQFJZaaiJDvUbSLGPlhpV3kIqXaRBulAsFzk'
+atoken = '1188729962-XuZUgmaVFFiTRnh7h3iE2e2XvISGdDQWH7uiPmO'
+asecret = 'J0U97BpjzzwKHqUBBNPlpAuwWbkt4AgFkdpUJqlMQcsDw'
 
 auth = tweepy.OAuthHandler(ckey, csecret)
 auth.set_access_token(atoken, asecret)
@@ -30,12 +23,11 @@ auth.set_access_token(atoken, asecret)
 api = tweepy.API(auth)
 
 user = api.me()
-
-print('Name ' + user.name)
+# print('Name ' + user.name)
 
 
 class StdOutListener(StreamListener):
-    ''' Handles data received from the stream. '''
+    
 
     def __init__(self, max_results): 
         super(StdOutListener, self).__init__()
@@ -51,6 +43,7 @@ class StdOutListener(StreamListener):
             self.max_count = float("inf")
 
     def on_data(self, data):
+
         ## if we have not hit the limit, write all applicable data
         if self.count < self.max_count: 
 
@@ -70,7 +63,6 @@ class StdOutListener(StreamListener):
 
             ## increment
             self.count += 1
-            print self.count
             return True
         else:
             self.text_output.close()
@@ -78,22 +70,37 @@ class StdOutListener(StreamListener):
             print 'tweets = '+str(self.count)
             return False
 
-
-    # 	return True
-
+    #   return True
     def on_error(self, status):
-    	print status
+        print status
 
 
 def extractPosts(keyword):
-    twitterStream = Stream(auth, StdOutListener(12))
-    twitterStream.filter(track=[keyword]) 
-
-	#need to extract only posts and output to .txt file
- 
-extractPosts("umbrellarevolution")
+	twitterStream = Stream(auth, StdOutListener(3))
+	twitterStream.filter(track=[keyword])
 
 
+@APP.route('/')
+def index():
+    """ Displays the index page accessible at '/'
+    """
+    
+    return flask.render_template('index.html')
+
+# @APP.route('/_add_numbers')
+# def add_numbers():
+#     a = request.args.get('a', 0, type=int)
+#     b = request.args.get('b', 0, type=int)
+#     return jsonify(result=a + b)
 
 
+@APP.route('/search',  methods=['POST'])
+def search():
+    print "searching"
+    data = request.form['data']
+    extractPosts(data)
+    return "Done Searching"
 
+if __name__ == '__main__':
+    APP.debug=True
+    APP.run()
