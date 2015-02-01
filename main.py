@@ -12,10 +12,10 @@ APP = flask.Flask(__name__)
 
 
 
-ckey = 'anBC9SHrBRMkah3vL0djtUzuv'
-csecret = 'OwfQRDpEo9HuwlLQFJZaaiJDvUbSLGPlhpV3kIqXaRBulAsFzk'
-atoken = '1188729962-XuZUgmaVFFiTRnh7h3iE2e2XvISGdDQWH7uiPmO'
-asecret = 'J0U97BpjzzwKHqUBBNPlpAuwWbkt4AgFkdpUJqlMQcsDw'
+ckey = '3nis884mLWtLoFppAX7EGwlwC'
+csecret = 'tcDmsh1vnpzxp04vjVZTps1rr4U2g0Cnkd5CgTvWsICrBTz07F'
+atoken = '3006060253-GOGZkRZOa8p9tU2bxYLYHknKoLCC75DE5lFx5iD'
+asecret = 'UAtu8khsOkHCUfDp0y5ahb1AV6GvcHVxPhz23lI1KtBCX'
 
 auth = tweepy.OAuthHandler(ckey, csecret)
 auth.set_access_token(atoken, asecret)
@@ -62,6 +62,7 @@ class StdOutListener(StreamListener):
                     self.date_output.write("\n\n")
 
             ## increment
+            print count
             self.count += 1
             return True
         else:
@@ -76,7 +77,7 @@ class StdOutListener(StreamListener):
 
 
 def extractPosts(keyword):
-	twitterStream = Stream(auth, StdOutListener(20))
+	twitterStream = Stream(auth, StdOutListener(100))
 	twitterStream.filter(track=[keyword])
 
 
