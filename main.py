@@ -58,8 +58,8 @@ class StdOutListener(StreamListener):
                     self.date_output.write(jd['created_at'].encode('utf-8'))
 
                 if jd.has_key('text') or jd.has_key('lang'):
-                    self.text_output.write("\n")
-                    self.date_output.write("\n")
+                    self.text_output.write("\n\n")
+                    self.date_output.write("\n\n")
 
             ## increment
             self.count += 1
@@ -76,7 +76,7 @@ class StdOutListener(StreamListener):
 
 
 def extractPosts(keyword):
-	twitterStream = Stream(auth, StdOutListener(3))
+	twitterStream = Stream(auth, StdOutListener(20))
 	twitterStream.filter(track=[keyword])
 
 
