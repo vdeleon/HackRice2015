@@ -8,10 +8,21 @@ from tweepy import Stream
 import json
 
 
-ckey = 'anBC9SHrBRMkah3vL0djtUzuv'
-csecret = 'OwfQRDpEo9HuwlLQFJZaaiJDvUbSLGPlhpV3kIqXaRBulAsFzk'
-atoken = '1188729962-XuZUgmaVFFiTRnh7h3iE2e2XvISGdDQWH7uiPmO'
-asecret = 'J0U97BpjzzwKHqUBBNPlpAuwWbkt4AgFkdpUJqlMQcsDw'
+
+# atoken = '1188729962-XuZUgmaVFFiTRnh7h3iE2e2XvISGdDQWH7uiPmO'
+# asecret = 'J0U97BpjzzwKHqUBBNPlpAuwWbkt4AgFkdpUJqlMQcsDw'
+
+
+# lily wen
+# ckey = 'anBC9SHrBRMkah3vL0djtUzuv'
+# csecret = 'OwfQRDpEo9HuwlLQFJZaaiJDvUbSLGPlhpV3kIqXaRBulAsFzk'
+
+#brian lee
+
+atoken = '3006060253-GOGZkRZOa8p9tU2bxYLYHknKoLCC75DE5lFx5iD'
+asecret = 'UAtu8khsOkHCUfDp0y5ahb1AV6GvcHVxPhz23lI1KtBCX'
+ckey = '3nis884mLWtLoFppAX7EGwlwC'
+csecret = 'tcDmsh1vnpzxp04vjVZTps1rr4U2g0Cnkd5CgTvWsICrBTz07F'
 
 auth = tweepy.OAuthHandler(ckey, csecret)
 auth.set_access_token(atoken, asecret)
@@ -28,8 +39,8 @@ class StdOutListener(StreamListener):
 
     def __init__(self, max_results): 
         super(StdOutListener, self).__init__()
-        self.text_output = open('tweet_text', 'w')
-        self.date_output = open('tweet_dates', 'w')
+        self.text_output = open('tweet_text.txt', 'w')
+        self.date_output = open('tweet_dates.txt', 'w')
 
         self.count = 0
         self.max_count = max_results
@@ -40,7 +51,6 @@ class StdOutListener(StreamListener):
             self.max_count = float("inf")
 
     def on_data(self, data):
-
         ## if we have not hit the limit, write all applicable data
         if self.count < self.max_count: 
 
@@ -60,6 +70,7 @@ class StdOutListener(StreamListener):
 
             ## increment
             self.count += 1
+            print self.count
             return True
         else:
             self.text_output.close()
@@ -75,12 +86,12 @@ class StdOutListener(StreamListener):
 
 
 def extractPosts(keyword):
-    twitterStream = Stream(auth, StdOutListener(3))
+    twitterStream = Stream(auth, StdOutListener(12))
     twitterStream.filter(track=[keyword]) 
 
 	#need to extract only posts and output to .txt file
  
-extractPosts("car")
+extractPosts("umbrellarevolution")
 
 
 
